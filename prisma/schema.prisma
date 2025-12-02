@@ -1,0 +1,103 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum StatusPaciente {
+  FILA
+  ESPERA
+  ATENDIMENTO
+  FINALIZADO
+}
+
+model Setor{
+  id String @id @default(uuid())
+  nomeSetor String 
+  isPrimeiroContato Boolean 
+
+  atendimento Atendimento[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("setor")
+}
+
+model Atendimento {
+  id String @id @default(uuid())
+  status StatusPaciente
+  ticket String
+  prioridade Boolean
+  atendimentoInfantil Boolean
+
+  fkPaciente String
+  paciente Paciente @relation(fields: [fkPaciente], references: [id])
+
+  fkSetor String
+  setor Setor @relation(fields: [fkSetor], references: [id])
+
+  fkAtendente String
+  atendente Atendente @relation(fields: [fkAtendente], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+
+  @@map("atendimento")
+}
+
+model Atendente{
+  id String @id @default(uuid())
+  nome String
+  login String 
+  senha String
+  ativo Boolean
+
+  atendimento Atendimento[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("atendente")
+}
+
+model Paciente{
+  id String @id @default(uuid())
+  nome String 
+
+  atendimento Atendimento[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@map("paciente")
+}
+
+model Anuncio{
+  id String @id @default(uuid())
+  titulo String 
+  urlYoutube String 
+  ativo Boolean
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Configuracao{
+  id String @id @default(uuid())
+  parametro String 
+  valor String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
