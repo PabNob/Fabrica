@@ -3,9 +3,10 @@ import prismaClient from "../../prisma"
 
 interface AtendimentoRequest{
     atendimentoUuid: string
-    setorUuid: string
 
-    status: StatusPaciente
+    setorUuid: string
+    atendenteUuid?: string
+    status?: StatusPaciente
 }
 
 class UpdateAtendimentoService{
