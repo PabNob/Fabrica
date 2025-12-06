@@ -1,0 +1,1250 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Documentação da API",
+        "contact": {
+            "email": "pablonobre.dev@gmail.com"
+        }
+    },
+    "paths": {
+        "/api/atendente": {
+            "get": {
+                "summary": "Rota responsável por retornar todos os atendentes",
+                "tags": [
+                    "Atendente"
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "$ref": "#/components/schemas/AtendenteSemSenha"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "summary": "Rota responsável por cadastrar um novo atendente",
+                "tags": [
+                    "Atendente"
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AtendenteComSenha"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "400": {
+                        "description": "Atendente já cadastrado"
+                    },
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "$ref": "#/components/schemas/AtendenteComSenha"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/atendente/{atendenteUuid}": {
+            "put": {
+                "summary": "Rota responsável por atualizar dados de um atendente",
+                "tags": [
+                    "Atendente"
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AtendenteComSenha"
+                            }
+                        }
+                    }
+                },
+                "400": {
+                    "description": "Atendente não encontrado"
+                },
+                "200": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "$ref": "#/components/schemas/AtendenteComSenha"
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Rota responsável por excluir o registro de um atendente",
+                "tags": [
+                    "Atendente"
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AtendenteSemSenha"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "400": {
+                        "description": "Atendente não encontrado"
+                    },
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "$ref": "#/components/schemas/AtendenteSemSenha"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/paciente": {
+            "get": {
+                "summary": "Rota responsável por retornar todos os pacientes",
+                "tags": [
+                    "Paciente"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista de pacientes retornada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Paciente"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "summary": "Rota responsável por cadastrar um novo paciente",
+                "tags": [
+                    "Paciente"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PacienteCreate"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "400": {
+                        "description": "Paciente já cadastrado"
+                    },
+                    "200": {
+                        "description": "Paciente cadastrado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Paciente"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/paciente/{pacienteUuid}": {
+            "put": {
+                "summary": "Rota responsável por atualizar dados de um paciente",
+                "tags": [
+                    "Paciente"
+                ],
+                "parameters": [
+                    {
+                        "name": "pacienteUuid",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PacienteUpdate"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "400": {
+                        "description": "Paciente não encontrado"
+                    },
+                    "200": {
+                        "description": "Paciente atualizado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Paciente"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Rota responsável por excluir o registro de um paciente",
+                "tags": [
+                    "Paciente"
+                ],
+                "parameters": [
+                    {
+                        "name": "pacienteUuid",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "Paciente não encontrado"
+                    },
+                    "200": {
+                        "description": "Paciente excluído com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Paciente"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/setor": {
+            "get": {
+                "summary": "Rota responsável por retornar todos os setores",
+                "tags": [
+                    "Setor"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista de setores retornada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Setor"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "summary": "Rota responsável por cadastrar um novo setor",
+                "tags": [
+                    "Setor"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/SetorCreate"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "400": {
+                        "description": "Setor já cadastrado"
+                    },
+                    "200": {
+                        "description": "Setor cadastrado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Setor"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/setor/{id}": {
+            "put": {
+                "summary": "Rota responsável por atualizar dados de um setor",
+                "tags": [
+                    "Setor"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/SetorUpdate"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "400": {
+                        "description": "Setor não encontrado"
+                    },
+                    "200": {
+                        "description": "Setor atualizado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Setor"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Rota responsável por excluir o registro de um setor",
+                "tags": [
+                    "Setor"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "Setor não encontrado"
+                    },
+                    "200": {
+                        "description": "Setor excluído com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Setor"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/setor/{setorUuid}/atendimento": {
+            "get": {
+                "summary": "Rota responsável por retornar todos os atendimentos de um setor",
+                "tags": [
+                    "Atendimento"
+                ],
+                "parameters": [
+                    {
+                        "name": "setorUuid",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista de atendimentos retornada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Atendimento"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "summary": "Rota responsável por cadastrar um novo atendimento em um setor",
+                "tags": [
+                    "Atendimento"
+                ],
+                "parameters": [
+                    {
+                        "name": "setorUuid",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AtendimentoCreate"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "400": {
+                        "description": "Erro ao cadastrar atendimento"
+                    },
+                    "200": {
+                        "description": "Atendimento cadastrado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Atendimento"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/setor/{setorUuid}/atendimento/{atendimentoUuid}": {
+            "put": {
+                "summary": "Rota responsável por atualizar o status de um atendimento",
+                "tags": [
+                    "Atendimento"
+                ],
+                "parameters": [
+                    {
+                        "name": "setorUuid",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    },
+                    {
+                        "name": "atendimentoUuid",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AtendimentoUpdate"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "400": {
+                        "description": "Atendimento não encontrado"
+                    },
+                    "200": {
+                        "description": "Atendimento atualizado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Atendimento"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/ad": {
+            "get": {
+                "summary": "Rota responsável por retornar todos os anúncios",
+                "tags": [
+                    "Anúncio"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista de anúncios retornada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Ad"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "summary": "Rota responsável por cadastrar um novo anúncio",
+                "tags": [
+                    "Anúncio"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AdCreate"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "400": {
+                        "description": "Anúncio já cadastrado ou dados inválidos"
+                    },
+                    "200": {
+                        "description": "Anúncio cadastrado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Ad"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/ad/{id}": {
+            "put": {
+                "summary": "Rota responsável por atualizar dados de um anúncio",
+                "tags": [
+                    "Anúncio"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AdUpdate"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "400": {
+                        "description": "Anúncio não encontrado ou identificador inválido"
+                    },
+                    "200": {
+                        "description": "Anúncio atualizado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Ad"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Rota responsável por excluir o registro de um anúncio",
+                "tags": [
+                    "Anúncio"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "Anúncio não encontrado ou identificador inválido"
+                    },
+                    "200": {
+                        "description": "Anúncio excluído com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Ad"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/config": {
+            "get": {
+                "summary": "Rota responsável por retornar todas as configurações",
+                "tags": [
+                    "Configuração"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista de configurações retornada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Config"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "summary": "Rota responsável por cadastrar uma nova configuração",
+                "tags": [
+                    "Configuração"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ConfigCreate"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "400": {
+                        "description": "Configuração já cadastrada ou dados inválidos"
+                    },
+                    "200": {
+                        "description": "Configuração cadastrada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Config"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/config/{id}": {
+            "put": {
+                "summary": "Rota responsável por atualizar dados de uma configuração",
+                "tags": [
+                    "Configuração"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ConfigUpdate"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "400": {
+                        "description": "Configuração não encontrada ou identificador inválido"
+                    },
+                    "200": {
+                        "description": "Configuração atualizada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Config"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Rota responsável por excluir o registro de uma configuração",
+                "tags": [
+                    "Configuração"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "Configuração não encontrada ou identificador inválido"
+                    },
+                    "200": {
+                        "description": "Configuração excluída com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Config"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "AtendenteSemSenha": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "description": "Identificador único do atendente"
+                    },
+                    "nome": {
+                        "type": "string",
+                        "description": "Nome completo do atendente"
+                    },
+                    "login": {
+                        "type": "string",
+                        "description": "Login utilizado para acesso ao sistema"
+                    },
+                    "ativo": {
+                        "type": "boolean",
+                        "description": "Indica se o atendente está ativo"
+                    }
+                },
+                "required": [
+                    "id",
+                    "nome",
+                    "login",
+                    "ativo"
+                ],
+                "example": {
+                    "id": "123e4567-e89b-12d3-a456-426614174000",
+                    "nome": "Max Verstappen",
+                    "login": "paiDaMclaren@gmail.com",
+                    "ativo": true
+                }
+            },
+            "AtendenteComSenha": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "description": "Identificador único do atendente"
+                    },
+                    "nome": {
+                        "type": "string",
+                        "description": "Nome completo do atendente"
+                    },
+                    "login": {
+                        "type": "string",
+                        "description": "Login utilizado para acesso ao sistema"
+                    },
+                    "senha": {
+                        "type": "string",
+                        "format": "password",
+                        "description": "Senha de acesso do atendente"
+                    },
+                    "ativo": {
+                        "type": "boolean",
+                        "description": "Indica se o atendente está ativo"
+                    }
+                },
+                "required": [
+                    "nome",
+                    "login",
+                    "senha"
+                ],
+                "example": {
+                    "id": "123e4567-e89b-12d3-a456-426614174000",
+                    "nome": "Max Verstappen",
+                    "login": "paiDaMclaren@gmail.com",
+                    "senha": "1",
+                    "ativo": true
+                }
+            },
+            "Paciente": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "description": "Identificador único do paciente"
+                    },
+                    "nome": {
+                        "type": "string",
+                        "description": "Nome completo do paciente"
+                    }
+                },
+                "required": [
+                    "id",
+                    "nome"
+                ],
+                "example": {
+                    "id": "987e6543-e21b-12d3-a456-426614174999",
+                    "nome": "Gabriel Bortoleto"
+                }
+            },
+            "PacienteCreate": {
+                "type": "object",
+                "properties": {
+                    "nome": {
+                        "type": "string",
+                        "description": "Nome completo do paciente"
+                    }
+                },
+                "required": [
+                    "nome"
+                ],
+                "example": {
+                    "nome": "Gabriel Bortoleto"
+                }
+            },
+            "PacienteUpdate": {
+                "type": "object",
+                "properties": {
+                    "nome": {
+                        "type": "string",
+                        "description": "Nome atualizado do paciente"
+                    }
+                },
+                "required": [
+                    "nome"
+                ],
+                "example": {
+                    "nome": "Gabriel Bortoleto"
+                }
+            },
+            "Setor": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "description": "Identificador único do setor"
+                    },
+                    "nomeSetor": {
+                        "type": "string",
+                        "description": "Nome do setor"
+                    },
+                    "isPrimeiroContato": {
+                        "type": "boolean",
+                        "description": "Indica se o setor é responsável pelo primeiro contato"
+                    }
+                },
+                "required": [
+                    "id",
+                    "nomeSetor",
+                    "isPrimeiroContato"
+                ],
+                "example": {
+                    "id": "321e4567-e89b-12d3-a456-426614174111",
+                    "nomeSetor": "Recepção",
+                    "isPrimeiroContato": true
+                }
+            },
+            "SetorCreate": {
+                "type": "object",
+                "properties": {
+                    "nomeSetor": {
+                        "type": "string",
+                        "description": "Nome do setor"
+                    },
+                    "isPrimeiroContato": {
+                        "type": "boolean",
+                        "description": "Indica se o setor é responsável pelo primeiro contato"
+                    }
+                },
+                "required": [
+                    "nomeSetor",
+                    "isPrimeiroContato"
+                ],
+                "example": {
+                    "nomeSetor": "Recepção",
+                    "isPrimeiroContato": true
+                }
+            },
+            "SetorUpdate": {
+                "type": "object",
+                "properties": {
+                    "nomeSetor": {
+                        "type": "string",
+                        "description": "Nome atualizado do setor"
+                    },
+                    "isPrimeiroContato": {
+                        "type": "boolean",
+                        "description": "Indica se o setor é responsável pelo primeiro contato"
+                    }
+                },
+                "required": [
+                    "nomeSetor",
+                    "isPrimeiroContato"
+                ],
+                "example": {
+                    "nomeSetor": "Atendimento Geral",
+                    "isPrimeiroContato": false
+                }
+            },
+            "Atendimento": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "description": "Identificador único do atendimento"
+                    },
+                    "ticket": {
+                        "type": "integer",
+                        "description": "Número sequencial do atendimento gerado pelo setor"
+                    },
+                    "prioridade": {
+                        "type": "boolean",
+                        "description": "Indica se o atendimento é prioritário"
+                    },
+                    "atendimentoInfantil": {
+                        "type": "boolean",
+                        "description": "Indica se o atendimento é infantil"
+                    },
+                    "status": {
+                        "type": "string",
+                        "description": "Status atual do atendimento",
+                        "enum": [
+                            "FILA",
+                            "AGUARDANDO",
+                            "EM_ANDAMENTO",
+                            "FINALIZADO"
+                        ]
+                    },
+                    "fkSetor": {
+                        "type": "string",
+                        "format": "uuid",
+                        "description": "Identificador do setor responsável"
+                    },
+                    "fkPaciente": {
+                        "type": "string",
+                        "format": "uuid",
+                        "description": "Identificador do paciente atendido"
+                    },
+                    "fkAtendente": {
+                        "type": "string",
+                        "format": "uuid",
+                        "description": "Identificador do atendente responsável"
+                    }
+                },
+                "required": [
+                    "id",
+                    "ticket",
+                    "prioridade",
+                    "atendimentoInfantil",
+                    "status",
+                    "fkSetor",
+                    "fkPaciente",
+                    "fkAtendente"
+                ],
+                "example": {
+                    "id": "111e4567-e89b-12d3-a456-426614174222",
+                    "ticket": 15,
+                    "prioridade": true,
+                    "atendimentoInfantil": false,
+                    "status": "FILA",
+                    "fkSetor": "321e4567-e89b-12d3-a456-426614174111",
+                    "fkPaciente": "987e6543-e21b-12d3-a456-426614174999",
+                    "fkAtendente": "123e4567-e89b-12d3-a456-426614174000"
+                }
+            },
+            "AtendimentoCreate": {
+                "type": "object",
+                "properties": {
+                    "prioridade": {
+                        "type": "boolean",
+                        "description": "Indica se o atendimento é prioritário"
+                    },
+                    "atendimentoInfantil": {
+                        "type": "boolean",
+                        "description": "Indica se o atendimento é infantil"
+                    },
+                    "pacienteUuid": {
+                        "type": "string",
+                        "format": "uuid",
+                        "description": "Identificador do paciente atendido"
+                    },
+                    "atendenteUuid": {
+                        "type": "string",
+                        "format": "uuid",
+                        "description": "Identificador do atendente responsável"
+                    }
+                },
+                "required": [
+                    "prioridade",
+                    "atendimentoInfantil",
+                    "pacienteUuid",
+                    "atendenteUuid"
+                ],
+                "example": {
+                    "prioridade": false,
+                    "atendimentoInfantil": true,
+                    "pacienteUuid": "987e6543-e21b-12d3-a456-426614174999",
+                    "atendenteUuid": "123e4567-e89b-12d3-a456-426614174000"
+                }
+            },
+            "AtendimentoUpdate": {
+                "type": "object",
+                "properties": {
+                    "status": {
+                        "type": "string",
+                        "description": "Novo status do atendimento",
+                        "enum": [
+                            "FILA",
+                            "AGUARDANDO",
+                            "EM_ANDAMENTO",
+                            "FINALIZADO"
+                        ]
+                    }
+                },
+                "required": [
+                    "status"
+                ],
+                "example": {
+                    "status": "EM_ANDAMENTO"
+                }
+            },
+            "Ad": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "description": "Identificador único do anúncio"
+                    },
+                    "titulo": {
+                        "type": "string",
+                        "description": "Título do anúncio"
+                    },
+                    "urlYoutube": {
+                        "type": "string",
+                        "description": "URL do vídeo do YouTube associado ao anúncio"
+                    },
+                    "ativo": {
+                        "type": "boolean",
+                        "description": "Indica se o anúncio está ativo"
+                    }
+                },
+                "required": [
+                    "id",
+                    "titulo",
+                    "urlYoutube",
+                    "ativo"
+                ],
+                "example": {
+                    "id": "555e4567-e89b-12d3-a456-426614174333",
+                    "titulo": "Campanha de Fim de Ano",
+                    "urlYoutube": "https://www.youtube.com/watch?v=abcd1234",
+                    "ativo": true
+                }
+            },
+            "AdCreate": {
+                "type": "object",
+                "properties": {
+                    "titulo": {
+                        "type": "string",
+                        "description": "Título do anúncio"
+                    },
+                    "urlYoutube": {
+                        "type": "string",
+                        "description": "URL do vídeo do YouTube associado ao anúncio"
+                    },
+                    "ativo": {
+                        "type": "boolean",
+                        "description": "Indica se o anúncio está ativo"
+                    }
+                },
+                "required": [
+                    "titulo",
+                    "urlYoutube",
+                    "ativo"
+                ],
+                "example": {
+                    "titulo": "Campanha de Fim de Ano",
+                    "urlYoutube": "https://www.youtube.com/watch?v=abcd1234",
+                    "ativo": true
+                }
+            },
+            "AdUpdate": {
+                "type": "object",
+                "properties": {
+                    "titulo": {
+                        "type": "string",
+                        "description": "Título atualizado do anúncio"
+                    },
+                    "urlYoutube": {
+                        "type": "string",
+                        "description": "URL atualizada do vídeo do YouTube"
+                    },
+                    "ativo": {
+                        "type": "boolean",
+                        "description": "Indica se o anúncio está ativo"
+                    }
+                },
+                "required": [
+                    "titulo",
+                    "urlYoutube",
+                    "ativo"
+                ],
+                "example": {
+                    "titulo": "Campanha de Verão",
+                    "urlYoutube": "https://www.youtube.com/watch?v=wxyz5678",
+                    "ativo": false
+                }
+            },
+            "Config": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "description": "Identificador único da configuração"
+                    },
+                    "parametro": {
+                        "type": "string",
+                        "description": "Nome do parâmetro de configuração"
+                    },
+                    "valor": {
+                        "type": "string",
+                        "description": "Valor associado ao parâmetro"
+                    }
+                },
+                "required": [
+                    "id",
+                    "parametro",
+                    "valor"
+                ],
+                "example": {
+                    "id": "777e4567-e89b-12d3-a456-426614174444",
+                    "parametro": "tempoMaximoAtendimento",
+                    "valor": "30"
+                }
+            },
+            "ConfigCreate": {
+                "type": "object",
+                "properties": {
+                    "parametro": {
+                        "type": "string",
+                        "description": "Nome do parâmetro de configuração"
+                    },
+                    "valor": {
+                        "type": "string",
+                        "description": "Valor associado ao parâmetro"
+                    }
+                },
+                "required": [
+                    "parametro",
+                    "valor"
+                ],
+                "example": {
+                    "parametro": "tempoMaximoAtendimento",
+                    "valor": "30"
+                }
+            },
+            "ConfigUpdate": {
+                "type": "object",
+                "properties": {
+                    "parametro": {
+                        "type": "string",
+                        "description": "Nome atualizado do parâmetro de configuração"
+                    },
+                    "valor": {
+                        "type": "string",
+                        "description": "Valor atualizado associado ao parâmetro"
+                    }
+                },
+                "required": [
+                    "parametro",
+                    "valor"
+                ],
+                "example": {
+                    "parametro": "tempoMaximoAtendimento",
+                    "valor": "45"
+                }
+            }
+        }
+    }
+}
