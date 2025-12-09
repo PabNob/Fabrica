@@ -9,17 +9,20 @@
     "paths": {
         "/api/atendente": {
             "get": {
-                "summary": "Rota responsável por retornar todos os atendentes",
+                "summary": "Rota responsável por listar todos os atendentes",
                 "tags": [
                     "Atendente"
                 ],
                 "responses": {
                     "200": {
+                        "description": "Lista de atendentes retornada com sucesso",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "type": "object",
-                                    "$ref": "#/components/schemas/AtendenteSemSenha"
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Atendente"
+                                    }
                                 }
                             }
                         }
@@ -32,24 +35,25 @@
                     "Atendente"
                 ],
                 "requestBody": {
+                    "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/AtendenteComSenha"
+                                "$ref": "#/components/schemas/AtendenteCreate"
                             }
                         }
                     }
                 },
                 "responses": {
                     "400": {
-                        "description": "Atendente já cadastrado"
+                        "description": "Dados inválidos ou atendente já cadastrado"
                     },
                     "200": {
+                        "description": "Atendente cadastrado com sucesso",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "type": "object",
-                                    "$ref": "#/components/schemas/AtendenteComSenha"
+                                    "$ref": "#/components/schemas/Atendente"
                                 }
                             }
                         }
@@ -63,53 +67,79 @@
                 "tags": [
                     "Atendente"
                 ],
-                "requestBody": {
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/AtendenteComSenha"
-                            }
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "atendenteUuid",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
                         }
                     }
-                },
-                "400": {
-                    "description": "Atendente não encontrado"
-                },
-                "200": {
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "type": "object",
-                                "$ref": "#/components/schemas/AtendenteComSenha"
-                            }
-                        }
-                    }
-                }
-            },
-            "delete": {
-                "summary": "Rota responsável por excluir o registro de um atendente",
-                "tags": [
-                    "Atendente"
                 ],
                 "requestBody": {
+                    "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/AtendenteSemSenha"
+                                "$ref": "#/components/schemas/AtendenteUpdate"
                             }
                         }
                     }
                 },
                 "responses": {
                     "400": {
-                        "description": "Atendente não encontrado"
+                        "description": "Atendente não encontrado ou identificador inválido"
                     },
                     "200": {
+                        "description": "Atendente atualizado com sucesso",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "type": "object",
-                                    "$ref": "#/components/schemas/AtendenteSemSenha"
+                                    "$ref": "#/components/schemas/Atendente"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Rota responsável por excluir um atendente",
+                "tags": [
+                    "Atendente"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "atendenteUuid",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "Atendente não encontrado ou identificador inválido"
+                    },
+                    "200": {
+                        "description": "Atendente excluído com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Atendente"
                                 }
                             }
                         }
@@ -119,7 +149,7 @@
         },
         "/api/paciente": {
             "get": {
-                "summary": "Rota responsável por retornar todos os pacientes",
+                "summary": "Rota responsável por listar todos os pacientes",
                 "tags": [
                     "Paciente"
                 ],
@@ -144,6 +174,11 @@
                 "tags": [
                     "Paciente"
                 ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -156,7 +191,7 @@
                 },
                 "responses": {
                     "400": {
-                        "description": "Paciente já cadastrado"
+                        "description": "Dados inválidos ou paciente já cadastrado"
                     },
                     "200": {
                         "description": "Paciente cadastrado com sucesso",
@@ -176,6 +211,11 @@
                 "summary": "Rota responsável por atualizar dados de um paciente",
                 "tags": [
                     "Paciente"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
                 ],
                 "parameters": [
                     {
@@ -200,7 +240,7 @@
                 },
                 "responses": {
                     "400": {
-                        "description": "Paciente não encontrado"
+                        "description": "Paciente não encontrado ou identificador inválido"
                     },
                     "200": {
                         "description": "Paciente atualizado com sucesso",
@@ -215,9 +255,14 @@
                 }
             },
             "delete": {
-                "summary": "Rota responsável por excluir o registro de um paciente",
+                "summary": "Rota responsável por excluir um paciente",
                 "tags": [
                     "Paciente"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
                 ],
                 "parameters": [
                     {
@@ -232,7 +277,7 @@
                 ],
                 "responses": {
                     "400": {
-                        "description": "Paciente não encontrado"
+                        "description": "Paciente não encontrado ou identificador inválido"
                     },
                     "200": {
                         "description": "Paciente excluído com sucesso",
@@ -249,7 +294,7 @@
         },
         "/api/setor": {
             "get": {
-                "summary": "Rota responsável por retornar todos os setores",
+                "summary": "Rota responsável por listar todos os setores",
                 "tags": [
                     "Setor"
                 ],
@@ -274,6 +319,11 @@
                 "tags": [
                     "Setor"
                 ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -286,7 +336,7 @@
                 },
                 "responses": {
                     "400": {
-                        "description": "Setor já cadastrado"
+                        "description": "Dados inválidos ou setor já cadastrado"
                     },
                     "200": {
                         "description": "Setor cadastrado com sucesso",
@@ -306,6 +356,11 @@
                 "summary": "Rota responsável por atualizar dados de um setor",
                 "tags": [
                     "Setor"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
                 ],
                 "parameters": [
                     {
@@ -330,7 +385,7 @@
                 },
                 "responses": {
                     "400": {
-                        "description": "Setor não encontrado"
+                        "description": "Setor não encontrado ou identificador inválido"
                     },
                     "200": {
                         "description": "Setor atualizado com sucesso",
@@ -345,9 +400,14 @@
                 }
             },
             "delete": {
-                "summary": "Rota responsável por excluir o registro de um setor",
+                "summary": "Rota responsável por excluir um setor",
                 "tags": [
                     "Setor"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
                 ],
                 "parameters": [
                     {
@@ -362,7 +422,7 @@
                 ],
                 "responses": {
                     "400": {
-                        "description": "Setor não encontrado"
+                        "description": "Setor não encontrado ou identificador inválido"
                     },
                     "200": {
                         "description": "Setor excluído com sucesso",
@@ -377,138 +437,9 @@
                 }
             }
         },
-        "/api/setor/{setorUuid}/atendimento": {
-            "get": {
-                "summary": "Rota responsável por retornar todos os atendimentos de um setor",
-                "tags": [
-                    "Atendimento"
-                ],
-                "parameters": [
-                    {
-                        "name": "setorUuid",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "string",
-                            "format": "uuid"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Lista de atendimentos retornada com sucesso",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "array",
-                                    "items": {
-                                        "$ref": "#/components/schemas/Atendimento"
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            },
-            "post": {
-                "summary": "Rota responsável por cadastrar um novo atendimento em um setor",
-                "tags": [
-                    "Atendimento"
-                ],
-                "parameters": [
-                    {
-                        "name": "setorUuid",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "string",
-                            "format": "uuid"
-                        }
-                    }
-                ],
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/AtendimentoCreate"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "400": {
-                        "description": "Erro ao cadastrar atendimento"
-                    },
-                    "200": {
-                        "description": "Atendimento cadastrado com sucesso",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Atendimento"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/api/setor/{setorUuid}/atendimento/{atendimentoUuid}": {
-            "put": {
-                "summary": "Rota responsável por atualizar o status de um atendimento",
-                "tags": [
-                    "Atendimento"
-                ],
-                "parameters": [
-                    {
-                        "name": "setorUuid",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "string",
-                            "format": "uuid"
-                        }
-                    },
-                    {
-                        "name": "atendimentoUuid",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "string",
-                            "format": "uuid"
-                        }
-                    }
-                ],
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/AtendimentoUpdate"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "400": {
-                        "description": "Atendimento não encontrado"
-                    },
-                    "200": {
-                        "description": "Atendimento atualizado com sucesso",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Atendimento"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
         "/api/ad": {
             "get": {
-                "summary": "Rota responsável por retornar todos os anúncios",
+                "summary": "Rota responsável por listar todos os anúncios",
                 "tags": [
                     "Anúncio"
                 ],
@@ -520,7 +451,7 @@
                                 "schema": {
                                     "type": "array",
                                     "items": {
-                                        "$ref": "#/components/schemas/Ad"
+                                        "$ref": "#/components/schemas/Anuncio"
                                     }
                                 }
                             }
@@ -533,26 +464,31 @@
                 "tags": [
                     "Anúncio"
                 ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
                 "requestBody": {
                     "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/AdCreate"
+                                "$ref": "#/components/schemas/AnuncioCreate"
                             }
                         }
                     }
                 },
                 "responses": {
                     "400": {
-                        "description": "Anúncio já cadastrado ou dados inválidos"
+                        "description": "Dados inválidos ou anúncio já cadastrado"
                     },
                     "200": {
                         "description": "Anúncio cadastrado com sucesso",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/Ad"
+                                    "$ref": "#/components/schemas/Anuncio"
                                 }
                             }
                         }
@@ -565,6 +501,11 @@
                 "summary": "Rota responsável por atualizar dados de um anúncio",
                 "tags": [
                     "Anúncio"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
                 ],
                 "parameters": [
                     {
@@ -582,7 +523,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/AdUpdate"
+                                "$ref": "#/components/schemas/AnuncioUpdate"
                             }
                         }
                     }
@@ -596,7 +537,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/Ad"
+                                    "$ref": "#/components/schemas/Anuncio"
                                 }
                             }
                         }
@@ -604,9 +545,14 @@
                 }
             },
             "delete": {
-                "summary": "Rota responsável por excluir o registro de um anúncio",
+                "summary": "Rota responsável por excluir um anúncio",
                 "tags": [
                     "Anúncio"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
                 ],
                 "parameters": [
                     {
@@ -628,7 +574,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/Ad"
+                                    "$ref": "#/components/schemas/Anuncio"
                                 }
                             }
                         }
@@ -663,6 +609,11 @@
                 "tags": [
                     "Configuração"
                 ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -695,6 +646,11 @@
                 "summary": "Rota responsável por atualizar dados de uma configuração",
                 "tags": [
                     "Configuração"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
                 ],
                 "parameters": [
                     {
@@ -738,10 +694,15 @@
                 "tags": [
                     "Configuração"
                 ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
                 "parameters": [
                     {
                         "name": "id",
-                        "in": "query",
+                        "in": "path",
                         "required": true,
                         "schema": {
                             "type": "string",
@@ -768,6 +729,14 @@
         }
     },
     "components": {
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT",
+                "description": "Token JWT obtido na rota de login (/api/login)"
+            }
+        },
         "schemas": {
             "AtendenteSemSenha": {
                 "type": "object",
