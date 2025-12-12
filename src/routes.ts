@@ -29,6 +29,7 @@ import { ReadAtendimentoController } from "./controllers/atendimento/ReadAtendim
 import { UpdateAtendimentoController } from "./controllers/atendimento/UpdateAtendimentoController";
 import { AuthAtendenteController } from "./controllers/login/AuthAtendenteController";
 import { isAuthenticated } from "./middlewares/isAuthenticated";
+import { isAdmin } from "./middlewares/isAdmin";
 
 // import { ListQueueController } from "./controllers/setorFila/ListQueueController";
 // import { NextQueueController } from "./controllers/setorFila/NextQueueController";
@@ -42,47 +43,47 @@ const router = Router();
     // Configuracao 
     router.get('/api/config', new ReadConfigController().handle)
 
-    router.post('/api/config', isAuthenticated, new CreateConfigController().handle)
+    router.post('/api/config', isAuthenticated, isAdmin(), new CreateConfigController().handle)
 
-    router.put('/api/config/:id', isAuthenticated, new UpdateConfigController().handle)
+    router.put('/api/config/:id', isAuthenticated, isAdmin(), new UpdateConfigController().handle)
 
-    router.delete('/api/config/:id', isAuthenticated, new DeleteConfigController().handle)
+    router.delete('/api/config/:id', isAuthenticated, isAdmin(), new DeleteConfigController().handle)
 
     // Anuncio
     router.get('/api/ad', new ReadAdController().handle)
 
     router.post('/api/ad', isAuthenticated, new CreateAdController().handle)
 
-    router.put('/api/ad/:id', isAuthenticated, new UpdateAdController().handle)
+    router.put('/api/ad/:id', isAuthenticated, isAdmin(), new UpdateAdController().handle)
 
-    router.delete('/api/ad/:id', isAuthenticated, new DeleteAdController().handle)
+    router.delete('/api/ad/:id', isAuthenticated, isAdmin(), new DeleteAdController().handle)
     
     // Atendente
     router.get('/api/atendente', new ReadAtendenteController().handle)
     
     router.post('/api/atendente', new CreateAtendenteController().handle)
     
-    router.put('/api/atendente/:atendenteUuid', isAuthenticated, new UpdateAtendenteController().handle)
+    router.put('/api/atendente/:atendenteUuid', isAuthenticated, isAdmin(), new UpdateAtendenteController().handle)
     
-    router.delete('/api/atendente/:atendenteUuid', isAuthenticated, new DeleteAtendenteController().handle)
+    router.delete('/api/atendente/:atendenteUuid', isAuthenticated, isAdmin(), new DeleteAtendenteController().handle)
     
     // Paciente
     router.get('/api/paciente', new ReadPacienteController().handle)
     
-    router.post('/api/paciente', isAuthenticated, new CreatePacienteController().handle)
+    router.post('/api/paciente', new CreatePacienteController().handle)
     
-    router.put('/api/paciente/:pacienteUuid', isAuthenticated, new UpdatePacienteController().handle)
+    router.put('/api/paciente/:pacienteUuid', isAuthenticated, isAdmin(), new UpdatePacienteController().handle)
     
-    router.delete('/api/paciente/:pacienteUuid', isAuthenticated, new DeletePacienteController().handle)
+    router.delete('/api/paciente/:pacienteUuid', isAuthenticated, isAdmin(), new DeletePacienteController().handle)
     
     // Setor
     router.get('/api/setor', new ReadSetorController().handle)
 
-    router.post('/api/setor', isAuthenticated, new CreateSetorController().handle)
+    router.post('/api/setor', new CreateSetorController().handle)
 
-    router.put('/api/setor/:id', isAuthenticated, new UpdateSetorController().handle)
+    router.put('/api/setor/:id', isAuthenticated, isAdmin(), new UpdateSetorController().handle)
 
-    router.delete('/api/setor/:id', isAuthenticated, new DeleteSetorController().handle)
+    router.delete('/api/setor/:id', isAuthenticated, isAdmin(), new DeleteSetorController().handle)
     
     // Atendimento
     router.get('/api/setor/:setorUuid/atendimento', new ReadAtendimentoController().handle)

@@ -5,7 +5,7 @@ import { CreateAtendenteService } from "../../services/atendente/CreateAtendente
 class CreateAtendenteController{
     async handle(req: Request, res: Response){
 
-        const { nome, login, senha, ativo } = req.body;
+        const { nome, login, senha, ativo, admin, setorUuid } = req.body;
 
 
         const createAtendenteService = new CreateAtendenteService();
@@ -14,7 +14,9 @@ class CreateAtendenteController{
             nome,
             login,
             senha,
-            ativo
+            ativo,
+            admin,
+            setorUuid
         });
 
         return res.json(atendente);

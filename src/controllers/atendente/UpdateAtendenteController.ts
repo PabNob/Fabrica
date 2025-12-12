@@ -6,7 +6,7 @@ class UpdateAtendenteController{
 
         const atendenteUuid = String(req.params.atendenteUuid);
 
-        const { nome, login, senha, ativo } = req.body;
+        const { nome, login, senha, ativo, setorUuid } = req.body;
 
 
 
@@ -17,7 +17,8 @@ class UpdateAtendenteController{
             nome, 
             login,
             senha,
-            ativo
+            ativo,
+            setorUuid
         })
 
         return res.json(atendente)

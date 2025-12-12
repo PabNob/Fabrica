@@ -7,10 +7,12 @@ interface AtendenteRequest{
     login?: string,
     senha?: string,
     ativo?: boolean,
+    
+    setorUuid?: string
 }
 
 class UpdateAtendenteService{
-    async execute({ atendenteUuid, nome, login, senha, ativo }:AtendenteRequest){
+    async execute({ atendenteUuid, nome, login, senha, ativo, setorUuid }:AtendenteRequest){
 
         const atendenteFound = await prismaClient.atendente.findFirst({
             where:{
@@ -22,7 +24,7 @@ class UpdateAtendenteService{
             throw new Error("Atendente não encontrado")
         }
 
-        const data:{nome?: string, login?: string, senha?: string, ativo?: boolean} = {};
+        const data:{nome?: string, login?: string, senha?: string, ativo?: boolean, setorUuid?: string} = {};
 
         if(nome != undefined){
             data.nome = nome
@@ -41,6 +43,10 @@ class UpdateAtendenteService{
 
         if(ativo != undefined){
             data.ativo = ativo
+        }
+
+        if(setorUuid != undefined){
+            data.setorUuid = setorUuid
         }
 
         if(Object.keys(data).length === 0){

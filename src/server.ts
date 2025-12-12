@@ -19,7 +19,7 @@ app.use(router);
 
 
 app.use(
-    '/api/doc', swaggerUi.serve, swaggerUi.setup(swaggerDocs)
+    '/', swaggerUi.serve, swaggerUi.setup(swaggerDocs)
 )
 
 // Todas as rotas passarão por aqui fazendo tratativa de erro

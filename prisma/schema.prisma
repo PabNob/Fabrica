@@ -13,6 +13,10 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum ROLE {
+  ADMIN
+}
+
 enum StatusPaciente {
   FILA
   ESPERA
@@ -26,6 +30,8 @@ model Setor{
   isPrimeiroContato Boolean 
 
   atendimento Atendimento[]
+
+  atendente Atendente[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -62,8 +68,12 @@ model Atendente{
   login String 
   senha String
   ativo Boolean
+  admin ROLE?
 
   atendimento Atendimento[]
+  
+  fkSetor String
+  setor Setor @relation(fields: [fkSetor], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

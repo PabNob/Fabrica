@@ -35,6 +35,8 @@ CREATE TABLE "atendente" (
     "login" TEXT NOT NULL,
     "senha" TEXT NOT NULL,
     "ativo" BOOLEAN NOT NULL,
+    "admin" BOOLEAN NOT NULL,
+    "fkSetor" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -82,3 +84,6 @@ ALTER TABLE "atendimento" ADD CONSTRAINT "atendimento_fkSetor_fkey" FOREIGN KEY 
 
 -- AddForeignKey
 ALTER TABLE "atendimento" ADD CONSTRAINT "atendimento_fkAtendente_fkey" FOREIGN KEY ("fkAtendente") REFERENCES "atendente"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "atendente" ADD CONSTRAINT "atendente_fkSetor_fkey" FOREIGN KEY ("fkSetor") REFERENCES "setor"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

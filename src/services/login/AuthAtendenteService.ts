@@ -29,7 +29,8 @@ class AuthAtendenteService{
         const token = sign(
             {
                 nome: atendente.nome,
-                login: atendente.login
+                login: atendente.login,
+                admin: atendente.admin
             },
 
             process.env.JWT_SECRET as string,
@@ -45,6 +46,7 @@ class AuthAtendenteService{
             id: atendente.id,
             nome: atendente.nome,
             login: atendente.login,
+            admin: atendente.admin,
             token
         }
 
