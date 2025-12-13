@@ -5,7 +5,7 @@ class UpdateSetorController{
     async handle(req: Request, res: Response){
 
         // Necessário o trecho String pra que o uuid não seja undefined
-        const setorUuid = String(req.params.id);
+        const setorUuid = String(req.params.setorUuid);
 
         const {nomeSetor, isPrimeiroContato} = req.body;
 

@@ -4,7 +4,7 @@ import { DeleteSetorService } from "../../services/setor/DeleteSetorService";
 class DeleteSetorController{
     async handle(req: Request, res: Response){
 
-        const setorUuid = String(req.params.id)
+        const setorUuid = String(req.params.setorUuid)
 
         const deleteSetorService = new DeleteSetorService();
 

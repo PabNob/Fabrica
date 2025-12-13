@@ -7,121 +7,1373 @@
         }
     },
     "paths": {
-        "/api/setor": {
+        "/api/login": {
             "post": {
-                "summary": "Criar novo setor",
+                "summary": "Autenticação de atendente",
+                "description": "Realiza login de um atendente e retorna um token JWT válido por 30 dias.",
                 "tags": [
-                    "Setor"
+                    "Login"
                 ],
                 "requestBody": {
                     "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
-                                "type": "object",
-                                "properties": {
-                                    "nomeSetor": {
-                                        "type": "string",
-                                        "example": "Cardiologia"
-                                    },
-                                    "isPrimeiroContato": {
-                                        "type": "boolean",
-                                        "example": true
-                                    }
-                                },
-                                "required": [
-                                    "nomeSetor",
-                                    "isPrimeiroContato"
-                                ]
+                                "$ref": "#/components/schemas/AuthRequest"
                             }
                         }
                     }
                 },
                 "responses": {
                     "200": {
-                        "description": "Setor criado com sucesso"
+                        "description": "Login realizado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AuthResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Falha no login"
                     }
                 }
             }
         },
-        "/api/setor/{id}": {
-            "put": {
-                "summary": "Atualizar setor existente",
+        "/api/setor": {
+            "get": {
+                "summary": "Listar setores",
+                "description": "Retorna todos os setores cadastrados.",
                 "tags": [
                     "Setor"
                 ],
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        },
-                        "description": "UUID do setor"
-                    }
-                ],
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "type": "object",
-                                "properties": {
-                                    "nomeSetor": {
-                                        "type": "string",
-                                        "example": "Ortopedia"
-                                    },
-                                    "isPrimeiroContato": {
-                                        "type": "boolean",
-                                        "example": false
+                "responses": {
+                    "200": {
+                        "description": "Lista de setores retornada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/SetorResponse"
                                     }
                                 }
                             }
                         }
                     }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Setor atualizado com sucesso"
-                    }
                 }
             },
-            "delete": {
-                "summary": "Deletar setor existente",
+            "post": {
+                "summary": "Criar setor",
+                "description": "Cria um novo setor no sistema.",
+                "tags": [
+                    "Setor"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/SetorRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Setor criado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SetorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Setor já existe"
+                    }
+                }
+            }
+        },
+        "/api/setor/{setorUuid}": {
+            "put": {
+                "summary": "Atualizar setor",
+                "description": "Atualiza os dados de um setor existente.",
                 "tags": [
                     "Setor"
                 ],
                 "parameters": [
                     {
-                        "name": "id",
+                        "name": "setorUuid",
                         "in": "path",
                         "required": true,
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "format": "uuid"
+                        },
+                        "description": "UUID do setor a ser atualizado"
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateSetorRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Setor atualizado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SetorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Setor não encontrado"
+                    },
+                    "400": {
+                        "description": "Nenhum campo para atualizar foi informado"
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Deletar setor",
+                "description": "Remove um setor existente pelo UUID.",
+                "tags": [
+                    "Setor"
+                ],
+                "parameters": [
+                    {
+                        "name": "setorUuid",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        },
+                        "description": "UUID do setor a ser deletado"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Setor deletado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SetorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Setor não encontrado"
+                    }
+                }
+            }
+        },
+        "/api/atendente": {
+            "get": {
+                "summary": "Listar atendentes",
+                "description": "Retorna todos os atendentes cadastrados.",
+                "tags": [
+                    "Atendente"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista de atendentes retornada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/AtendenteResponse"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "summary": "Criar atendente",
+                "description": "Cria um novo atendente vinculado a um setor.",
+                "tags": [
+                    "Atendente"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AtendenteRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Atendente criado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AtendenteResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Campos faltando ou atendente já cadastrado"
+                    },
+                    "404": {
+                        "description": "Setor inválido"
+                    }
+                }
+            }
+        },
+        "/api/atendente/{atendenteUuid}": {
+            "put": {
+                "summary": "Atualizar atendente",
+                "description": "Atualiza os dados de um atendente existente.",
+                "tags": [
+                    "Atendente"
+                ],
+                "parameters": [
+                    {
+                        "name": "atendenteUuid",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        },
+                        "description": "UUID do atendente a ser atualizado"
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateAtendenteRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Atendente atualizado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AtendenteResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Atendente não encontrado"
+                    },
+                    "400": {
+                        "description": "Não foi informado algo para atualizar"
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Deletar atendente",
+                "description": "Remove um atendente existente pelo UUID.",
+                "tags": [
+                    "Atendente"
+                ],
+                "parameters": [
+                    {
+                        "name": "atendenteUuid",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        },
+                        "description": "UUID do atendente a ser deletado"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Atendente deletado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AtendenteResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Atendente não encontrado"
+                    }
+                }
+            }
+        },
+        "/api/paciente": {
+            "get": {
+                "summary": "Listar pacientes",
+                "description": "Retorna todos os pacientes cadastrados.",
+                "tags": [
+                    "Paciente"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista de pacientes retornada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/PacienteResponse"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "summary": "Criar paciente",
+                "description": "Cria um novo paciente no sistema.",
+                "tags": [
+                    "Paciente"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PacienteRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Paciente criado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PacienteResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Paciente já tem cadastro"
+                    }
+                }
+            }
+        },
+        "/api/paciente/{pacienteUuid}": {
+            "put": {
+                "summary": "Atualizar paciente",
+                "description": "Atualiza os dados de um paciente existente.",
+                "tags": [
+                    "Paciente"
+                ],
+                "parameters": [
+                    {
+                        "name": "pacienteUuid",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        },
+                        "description": "UUID do paciente a ser atualizado"
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdatePacienteRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Paciente atualizado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PacienteResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Paciente não encontrado"
+                    },
+                    "400": {
+                        "description": "Nenhum campo para atualizar foi informado"
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Deletar paciente",
+                "description": "Remove um paciente existente pelo UUID.",
+                "tags": [
+                    "Paciente"
+                ],
+                "parameters": [
+                    {
+                        "name": "pacienteUuid",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        },
+                        "description": "UUID do paciente a ser deletado"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Paciente deletado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PacienteResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Paciente não encontrado"
+                    }
+                }
+            }
+        },
+        "/api/ad": {
+            "get": {
+                "summary": "Listar anúncios",
+                "description": "Retorna todos os anúncios cadastrados.",
+                "tags": [
+                    "Anúncio"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista de anúncios retornada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/AdResponse"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "summary": "Criar anúncio",
+                "description": "Cria um novo anúncio no sistema.",
+                "tags": [
+                    "Anúncio"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AdRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Anúncio criado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AdResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Anúncio já existe"
+                    }
+                }
+            }
+        },
+        "/api/ad/{anuncioUuid}": {
+            "put": {
+                "summary": "Atualizar anúncio",
+                "description": "Atualiza os dados de um anúncio existente.",
+                "tags": [
+                    "Anúncio"
+                ],
+                "parameters": [
+                    {
+                        "name": "anuncioUuid",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        },
+                        "description": "UUID do anúncio a ser atualizado"
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateAdRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Anúncio atualizado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AdResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Anúncio não encontrado"
+                    },
+                    "400": {
+                        "description": "Nenhum campo para atualizar foi informado"
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Deletar anúncio",
+                "description": "Remove um anúncio existente pelo UUID.",
+                "tags": [
+                    "Anúncio"
+                ],
+                "parameters": [
+                    {
+                        "name": "anuncioUuid",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        },
+                        "description": "UUID do anúncio a ser deletado"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Anúncio deletado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AdResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Anúncio não encontrado"
+                    }
+                }
+            }
+        },
+        "/api/config": {
+            "get": {
+                "summary": "Listar configurações",
+                "description": "Retorna todas as configurações cadastradas.",
+                "tags": [
+                    "Configuração"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista de configurações retornada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/ConfigResponse"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "summary": "Criar configuração",
+                "description": "Cria uma nova configuração no sistema.",
+                "tags": [
+                    "Configuração"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ConfigRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Configuração criada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConfigResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Já existe uma configuração semelhante"
+                    }
+                }
+            }
+        },
+        "/api/config/{configUuid}": {
+            "put": {
+                "summary": "Atualizar configuração",
+                "description": "Atualiza os dados de uma configuração existente.",
+                "tags": [
+                    "Configuração"
+                ],
+                "parameters": [
+                    {
+                        "name": "configUuid",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        },
+                        "description": "UUID da configuração a ser atualizada"
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateConfigRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Configuração atualizada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConfigResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Configuração não encontrada"
+                    },
+                    "400": {
+                        "description": "Não foi informado algo para atualizar"
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Deletar configuração",
+                "description": "Remove uma configuração existente pelo UUID.",
+                "tags": [
+                    "Configuração"
+                ],
+                "parameters": [
+                    {
+                        "name": "configUuid",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        },
+                        "description": "UUID da configuração a ser deletada"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Configuração deletada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConfigResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Configuração não encontrada"
+                    }
+                }
+            }
+        },
+        "/api/setor/{setorUuid}/atendimento": {
+            "get": {
+                "summary": "Listar atendimentos por setor",
+                "description": "Retorna todos os atendimentos vinculados a um setor específico.",
+                "tags": [
+                    "Atendimento"
+                ],
+                "parameters": [
+                    {
+                        "name": "setorUuid",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
                         },
                         "description": "UUID do setor"
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "Setor deletado com sucesso"
+                        "description": "Lista de atendimentos retornada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/AtendimentoResponse"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Setor não encontrado"
+                    }
+                }
+            },
+            "post": {
+                "summary": "Criar atendimento",
+                "description": "Cria um novo atendimento vinculado a um setor, paciente e atendente.",
+                "tags": [
+                    "Atendimento"
+                ],
+                "parameters": [
+                    {
+                        "name": "setorUuid",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        },
+                        "description": "UUID do setor"
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AtendimentoRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Atendimento criado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AtendimentoResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Setor ou atendente não encontrado"
+                    }
+                }
+            }
+        },
+        "/api/setor/{setorUuid}/atendimento/{atendimentoUuid}": {
+            "put": {
+                "summary": "Atualizar atendimento",
+                "description": "Atualiza o status de um atendimento existente.",
+                "tags": [
+                    "Atendimento"
+                ],
+                "parameters": [
+                    {
+                        "name": "setorUuid",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        },
+                        "description": "UUID do setor"
+                    },
+                    {
+                        "name": "atendimentoUuid",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        },
+                        "description": "UUID do atendimento"
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateAtendimentoRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Atendimento atualizado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AtendimentoResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Setor ou atendimento não encontrado"
+                    },
+                    "400": {
+                        "description": "Nenhum campo para atualizar foi informado"
                     }
                 }
             }
         }
     },
     "components": {
-        "securitySchemes": {
-            "bearerAuth": {
-                "type": "http",
-                "scheme": "bearer",
-                "bearerFormat": "JWT",
-                "description": "Token JWT obtido na rota de login (/api/login)"
-            }
-        },
         "schemas": {
-               
+            "AuthRequest": {
+                "type": "object",
+                "required": [
+                    "login",
+                    "senha"
+                ],
+                "properties": {
+                    "login": {
+                        "type": "string",
+                        "example": "joao.silva"
+                    },
+                    "senha": {
+                        "type": "string",
+                        "format": "password",
+                        "example": "123456"
+                    }
+                }
+            },
+            "AuthResponse": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "b1a2c3d4-e5f6-7890-abcd-1234567890ef"
+                    },
+                    "nome": {
+                        "type": "string",
+                        "example": "João Silva"
+                    },
+                    "login": {
+                        "type": "string",
+                        "example": "joao.silva"
+                    },
+                    "admin": {
+                        "type": "string",
+                        "nullable": true,
+                        "example": "ADMIN"
+                    },
+                    "token": {
+                        "type": "string",
+                        "description": "JWT válido por 30 dias",
+                        "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                    }
+                }
+            },
+            "SetorRequest": {
+                "type": "object",
+                "required": [
+                    "nomeSetor",
+                    "isPrimeiroContato"
+                ],
+                "properties": {
+                    "nomeSetor": {
+                        "type": "string",
+                        "example": "Triagem"
+                    },
+                    "isPrimeiroContato": {
+                        "type": "boolean",
+                        "example": true
+                    }
+                }
+            },
+            "UpdateSetorRequest": {
+                "type": "object",
+                "properties": {
+                    "nomeSetor": {
+                        "type": "string",
+                        "example": "Atendimento Geral"
+                    },
+                    "isPrimeiroContato": {
+                        "type": "boolean",
+                        "example": false
+                    }
+                }
+            },
+            "SetorResponse": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "c1a2b3d4-e5f6-7890-abcd-1234567890ef"
+                    },
+                    "nomeSetor": {
+                        "type": "string",
+                        "example": "Triagem"
+                    },
+                    "isPrimeiroContato": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "createdAt": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2025-12-12T23:59:59Z"
+                    },
+                    "updatedAt": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2025-12-12T23:59:59Z"
+                    }
+                }
+            },
+            "AtendenteRequest": {
+                "type": "object",
+                "required": [
+                    "nome",
+                    "login",
+                    "senha",
+                    "ativo",
+                    "setorUuid"
+                ],
+                "properties": {
+                    "nome": {
+                        "type": "string",
+                        "example": "Maria Oliveira"
+                    },
+                    "login": {
+                        "type": "string",
+                        "example": "maria.oliveira"
+                    },
+                    "senha": {
+                        "type": "string",
+                        "format": "password",
+                        "example": "123456"
+                    },
+                    "ativo": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "admin": {
+                        "type": "string",
+                        "nullable": true,
+                        "example": "ADMIN"
+                    },
+                    "setorUuid": {
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "c1a2b3d4-e5f6-7890-abcd-1234567890ef"
+                    }
+                }
+            },
+            "UpdateAtendenteRequest": {
+                "type": "object",
+                "properties": {
+                    "nome": {
+                        "type": "string",
+                        "example": "João Souza"
+                    },
+                    "login": {
+                        "type": "string",
+                        "example": "joao.souza"
+                    },
+                    "senha": {
+                        "type": "string",
+                        "format": "password",
+                        "example": "novaSenha123"
+                    },
+                    "ativo": {
+                        "type": "boolean",
+                        "example": false
+                    },
+                    "setorUuid": {
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "d9f8e7c6-b5a4-3210-abcd-9876543210ef"
+                    }
+                }
+            },
+            "AtendenteResponse": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "a1b2c3d4-e5f6-7890-abcd-1234567890ef"
+                    },
+                    "nome": {
+                        "type": "string",
+                        "example": "Maria Oliveira"
+                    },
+                    "login": {
+                        "type": "string",
+                        "example": "maria.oliveira"
+                    },
+                    "ativo": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "admin": {
+                        "type": "string",
+                        "nullable": true,
+                        "example": "ADMIN"
+                    },
+                    "fkSetor": {
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "c1a2b3d4-e5f6-7890-abcd-1234567890ef"
+                    },
+                    "createdAt": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2025-12-12T23:59:59Z"
+                    },
+                    "updatedAt": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2025-12-12T23:59:59Z"
+                    }
+                }
+            },
+            "PacienteRequest": {
+                "type": "object",
+                "required": [
+                    "nome"
+                ],
+                "properties": {
+                    "nome": {
+                        "type": "string",
+                        "example": "Carlos Pereira"
+                    }
+                }
+            },
+            "UpdatePacienteRequest": {
+                "type": "object",
+                "properties": {
+                    "nome": {
+                        "type": "string",
+                        "example": "Ana Souza"
+                    }
+                }
+            },
+            "PacienteResponse": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "a1b2c3d4-e5f6-7890-abcd-1234567890ef"
+                    },
+                    "nome": {
+                        "type": "string",
+                        "example": "Carlos Pereira"
+                    },
+                    "createdAt": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2025-12-12T23:59:59Z"
+                    },
+                    "updatedAt": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2025-12-12T23:59:59Z"
+                    }
+                }
+            },
+            "AdRequest": {
+                "type": "object",
+                "required": [
+                    "titulo",
+                    "urlYoutube",
+                    "ativo"
+                ],
+                "properties": {
+                    "titulo": {
+                        "type": "string",
+                        "example": "Campanha de Vacinação"
+                    },
+                    "urlYoutube": {
+                        "type": "string",
+                        "format": "uri",
+                        "example": "https://www.youtube.com/watch?v=abcd1234"
+                    },
+                    "ativo": {
+                        "type": "boolean",
+                        "example": true
+                    }
+                }
+            },
+            "UpdateAdRequest": {
+                "type": "object",
+                "properties": {
+                    "titulo": {
+                        "type": "string",
+                        "example": "Campanha de Prevenção"
+                    },
+                    "urlYoutube": {
+                        "type": "string",
+                        "format": "uri",
+                        "example": "https://www.youtube.com/watch?v=wxyz5678"
+                    },
+                    "ativo": {
+                        "type": "boolean",
+                        "example": false
+                    }
+                }
+            },
+            "AdResponse": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "a1b2c3d4-e5f6-7890-abcd-1234567890ef"
+                    },
+                    "titulo": {
+                        "type": "string",
+                        "example": "Campanha de Vacinação"
+                    },
+                    "urlYoutube": {
+                        "type": "string",
+                        "format": "uri",
+                        "example": "https://www.youtube.com/watch?v=abcd1234"
+                    },
+                    "ativo": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "createdAt": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2025-12-12T23:59:59Z"
+                    },
+                    "updatedAt": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2025-12-12T23:59:59Z"
+                    }
+                }
+            },
+            "ConfigRequest": {
+                "type": "object",
+                "required": [
+                    "parametro",
+                    "valor"
+                ],
+                "properties": {
+                    "parametro": {
+                        "type": "string",
+                        "example": "tempo_maximo_atendimento"
+                    },
+                    "valor": {
+                        "type": "string",
+                        "example": "30"
+                    }
+                }
+            },
+            "UpdateConfigRequest": {
+                "type": "object",
+                "properties": {
+                    "parametro": {
+                        "type": "string",
+                        "example": "tempo_maximo_atendimento"
+                    },
+                    "valor": {
+                        "type": "string",
+                        "example": "45"
+                    }
+                }
+            },
+            "ConfigResponse": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "a1b2c3d4-e5f6-7890-abcd-1234567890ef"
+                    },
+                    "parametro": {
+                        "type": "string",
+                        "example": "tempo_maximo_atendimento"
+                    },
+                    "valor": {
+                        "type": "string",
+                        "example": "30"
+                    },
+                    "createdAt": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2025-12-12T23:59:59Z"
+                    },
+                    "updatedAt": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2025-12-12T23:59:59Z"
+                    }
+                }
+            },
+            "AtendimentoRequest": {
+                "type": "object",
+                "required": [
+                    "prioridade",
+                    "atendimentoInfantil",
+                    "pacienteUuid",
+                    "atendenteUuid"
+                ],
+                "properties": {
+                    "prioridade": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "atendimentoInfantil": {
+                        "type": "boolean",
+                        "example": false
+                    },
+                    "pacienteUuid": {
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "a1b2c3d4-e5f6-7890-abcd-1234567890ef"
+                    },
+                    "atendenteUuid": {
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "b2c3d4e5-f6a7-8901-abcd-9876543210ef"
+                    }
+                }
+            },
+            "UpdateAtendimentoRequest": {
+                "type": "object",
+                "properties": {
+                    "status": {
+                        "type": "string",
+                        "enum": [
+                            "FILA",
+                            "ESPERA",
+                            "ATENDIMENTO",
+                            "FINALIZADO"
+                        ],
+                        "example": "ATENDIMENTO"
+                    }
+                }
+            },
+            "AtendimentoResponse": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "c3d4e5f6-a7b8-9012-abcd-1234567890ef"
+                    },
+                    "status": {
+                        "type": "string",
+                        "enum": [
+                            "FILA",
+                            "ESPERA",
+                            "ATENDIMENTO",
+                            "FINALIZADO"
+                        ],
+                        "example": "FILA"
+                    },
+                    "ticket": {
+                        "type": "string",
+                        "example": "TCK-2025-0001"
+                    },
+                    "prioridade": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "atendimentoInfantil": {
+                        "type": "boolean",
+                        "example": false
+                    },
+                    "fkPaciente": {
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "d4e5f6a7-b8c9-0123-abcd-9876543210ef"
+                    },
+                    "fkSetor": {
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "e5f6a7b8-c9d0-1234-abcd-9876543210ef"
+                    },
+                    "fkAtendente": {
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "f6a7b8c9-d0e1-2345-abcd-9876543210ef"
+                    },
+                    "createdAt": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2025-12-12T23:59:59Z"
+                    },
+                    "updatedAt": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2025-12-12T23:59:59Z"
+                    }
+                }
+            }
         }
     }
 }

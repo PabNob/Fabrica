@@ -4,7 +4,7 @@ import { DeleteAdService } from "../../services/anuncio/DeleteAdService";
 class DeleteAdController{
     async handle(req: Request, res: Response){
         
-        const adUuid = req.params.id;
+        const adUuid = String(req.params.anuncioUuid);
 
         if(!adUuid){
             throw new Error("Identificador inválido")

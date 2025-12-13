@@ -45,18 +45,18 @@ const router = Router();
 
     router.post('/api/config', isAuthenticated, isAdmin(), new CreateConfigController().handle)
 
-    router.put('/api/config/:id', isAuthenticated, isAdmin(), new UpdateConfigController().handle)
+    router.put('/api/config/:configUuid', isAuthenticated, isAdmin(), new UpdateConfigController().handle)
 
-    router.delete('/api/config/:id', isAuthenticated, isAdmin(), new DeleteConfigController().handle)
+    router.delete('/api/config/:configUuid', isAuthenticated, isAdmin(), new DeleteConfigController().handle)
 
     // Anuncio
     router.get('/api/ad', new ReadAdController().handle)
 
     router.post('/api/ad', isAuthenticated, new CreateAdController().handle)
 
-    router.put('/api/ad/:id', isAuthenticated, isAdmin(), new UpdateAdController().handle)
+    router.put('/api/ad/:anuncioUuid', isAuthenticated, isAdmin(), new UpdateAdController().handle)
 
-    router.delete('/api/ad/:id', isAuthenticated, isAdmin(), new DeleteAdController().handle)
+    router.delete('/api/ad/:anuncioUuid', isAuthenticated, isAdmin(), new DeleteAdController().handle)
     
     // Atendente
     router.get('/api/atendente', new ReadAtendenteController().handle)
@@ -81,9 +81,9 @@ const router = Router();
 
     router.post('/api/setor', new CreateSetorController().handle)
 
-    router.put('/api/setor/:id', isAuthenticated, isAdmin(), new UpdateSetorController().handle)
+    router.put('/api/setor/:setorUuid', isAuthenticated, isAdmin(), new UpdateSetorController().handle)
 
-    router.delete('/api/setor/:id', isAuthenticated, isAdmin(), new DeleteSetorController().handle)
+    router.delete('/api/setor/:setorUuid', isAuthenticated, isAdmin(), new DeleteSetorController().handle)
     
     // Atendimento
     router.get('/api/setor/:setorUuid/atendimento', new ReadAtendimentoController().handle)

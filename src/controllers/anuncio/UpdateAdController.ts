@@ -4,7 +4,7 @@ import { UpdateAdService } from "../../services/anuncio/UpdateAdService";
 class UpdateAdController {
     async handle(req: Request, res: Response){
 
-        const adUuid = req.params.id;
+        const adUuid = String(req.params.anuncioUuid);
 
         const {titulo, urlYoutube, ativo} = req.body;
 
